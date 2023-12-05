@@ -1,8 +1,8 @@
 # SAE_Reseau_Systeme
 
-![GitHub last commit](https://img.shields.io/github/last-commit/Yannis-Barache/SAE_Reseau_Systeme?style=for-the-badge)
+![GitHub last commit](https://img.shields.io/github/last-commit/Yannis-barache/SAE-3.05)
 
-![GitHub repo size](https://img.shields.io/github/repo-size/Yannis-Barache/SAE_Reseau_Systeme?style=for-the-badge)
+![GitHub repo size](https://img.shields.io/github/repo-size/Yannis-barache/SAE_Reseau_Systeme?style=for-the-badge)
 
 ## Description du projet
 
