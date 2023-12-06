@@ -7,6 +7,7 @@
 ![Logo de l'université et logo de l'IUT'O informatique](./img/Logo.png)
 
 ## 📝 Table des matières
+
 <style>
 .table {
     background-color: #f2f2f2;
