@@ -8,43 +8,9 @@
 
 ## 📝 Table des matières
 
-<style>
-.table {
-    background-color: #f2f2f2;
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-}
-
-.table ul {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-
-    justify-content: center;
-    align-items: center;
-}
-
-.table ul li {
-    list-style-type: none;
-}
-
-.table ul li a {
-    text-decoration: none;
-    color: #000000;
-    border: 1px solid #000000;
-    padding: 3px;
-}
-
-.table ul li a:hover {
-    color: #666;
-}
-</style>
 
 
-<nav class=table>
+<nav>
     <ul>
         <li><a href="#description">Description du projet</a></li>
         <li><a href="#membres">Membres du groupe</a></li>
