@@ -1,4 +1,4 @@
-# :incoming_envelope: Tuit'o :incoming_envelope:
+# Tuit'o :incoming_envelope:
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/Yannis-barache/SAE_Reseau_Systeme?style=for-the-badge)
 
