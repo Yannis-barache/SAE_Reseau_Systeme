@@ -1,8 +1,17 @@
 # :incoming_envelope: Tuit'o :incoming_envelope:
 
-<!-- ![GitHub last commit](https://img.shields.io/github/last-commit/Yannis-barache/SAE_Reseau_Systeme?style=for-the-badge)
+![GitHub last commit](https://img.shields.io/github/last-commit/Yannis-barache/SAE_Reseau_Systeme?style=for-the-badge)
 
-![GitHub repo size](https://img.shields.io/github/repo-size/Yannis-barache/TUITO?style=for-the-badge) -->
+![GitHub repo size](https://img.shields.io/github/repo-size/Yannis-barache/SAE_Reseau_Systeme?style=for-the-badge)
+
+![GitHub top language](https://img.shields.io/github/languages/top/Yannis-barache/SAE_Reseau_Systeme?style=for-the-badge)
+
+![GitHub language count](https://img.shields.io/github/languages/count/Yannis-barache/SAE_Reseau_Systeme?style=for-the-badge)
+
+
+![GitHub contributors](https://img.shields.io/github/contributors/Yannis-barache/SAE_Reseau_Systeme?style=for-the-badge)
+
+
 
 ![Logo de l'université et logo de l'IUT'O informatique](./img/Logo.png)
 
