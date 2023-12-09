@@ -41,7 +41,7 @@ public class Client {
 
     public static void main(String[] args) {
         try {
-            Socket socket = new Socket("localhost", 5000);
+            Socket socket = new Socket("localhost", 5555);
             Client client = new Client(socket);
             Thread envoyer = new Thread(new Runnable() {
                 String msg;
@@ -75,6 +75,8 @@ public class Client {
             });
             envoyer.start();
             recevoir.start();
+
+            
 
         } catch (IOException e) {
             throw new RuntimeException(e);
