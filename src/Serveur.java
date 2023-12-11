@@ -12,15 +12,15 @@ public class Serveur {
 
     final ServerSocket serveurSocket;
     Socket clientSocket;
-    final BufferedReader in;
-    final PrintWriter out;
+    BufferedReader in;
+    PrintWriter out;
     final Scanner sc = new Scanner(System.in);
+
+    static ExecutorService pool = Executors.newFixedThreadPool(10);
 
     public Serveur() throws IOException {
         serveurSocket = new ServerSocket(5555);
-        clientSocket = serveurSocket.accept();
-        out = new PrintWriter(clientSocket.getOutputStream());
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        sc.useDelimiter("\n");
     }
 
     public void EnvoiMessage(String msg) {
@@ -39,48 +39,68 @@ public class Serveur {
         serveurSocket.close();
     }
 
+    public void ouvre() throws IOException {
+        while (true){
+            System.out.println("En attente d'un client");
+            clientSocket = serveurSocket.accept();
+            System.out.println("Nouveau client connecté");
 
+        }
+    }
 
-    public static void main(String[] test) throws IOException {
-        Serveur s = new Serveur();
+    public void principale() throws IOException {
         String msg;
-        ExecutorService pool = Executors.newFixedThreadPool(10);
         while (true) {
 
-            Socket clientSocket = s.serveurSocket.accept();
+            System.out.println("En attente d'un client");
+            Socket clientSocket = this.serveurSocket.accept();
+            out = new PrintWriter(clientSocket.getOutputStream());
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             System.out.println("Nouveau client connecté");
 
             Thread t = new Thread(new ClientHandler(clientSocket));
             pool.submit(t);
-            msg = s.ReceptionMessage();
+            msg = this.ReceptionMessage();
 
             if (msg == null) {
                 System.out.println("Client déconnecté");
-                s.clientSocket.close();
-                s.clientSocket = s.serveurSocket.accept();
+                this.clientSocket.close();
+                this.clientSocket = this.serveurSocket.accept();
             }
             if (msg.equals("/quit")) {
                 System.out.println("Client déconnecté");
-                s.clientSocket.close();
-                s.clientSocket = s.serveurSocket.accept();
+                this.clientSocket.close();
+                this.clientSocket = this.serveurSocket.accept();
             }
 
 
             if (msg.equals("/help")) {
-                s.EnvoiMessage("Liste des commandes : \n /help : affiche la liste des commandes \n /quit : vous déconnecte \n /ip : Renvoi votre ip \n ");
+                this.EnvoiMessage("Liste des commandes : \n /help : affiche la liste des commandes \n /quit : vous déconnecte \n /ip : Renvoi votre ip \n ");
 
             }
 
 
             // Récupération de l'ip du client
-            String ip = s.clientSocket.getRemoteSocketAddress().toString();
-            System.out.println(ip +" : " + msg);
+            if (clientSocket != null) {
+                String ip = this.clientSocket.getRemoteSocketAddress().toString();
+                System.out.println(ip);
+            }
 
 
-            
+
 
 
         }
+
+    }
+
+
+
+    public static void main(String[] test) throws IOException {
+        Serveur s = new Serveur();
+        String msg;
+        s.principale();
+
 
     }
 }
