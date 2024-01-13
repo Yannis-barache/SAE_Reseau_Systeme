@@ -58,7 +58,7 @@ public class Message {
             RequetesJson.deleteMessage(this.id);
         }
         else {
-            System.out.println("Vous ne pouvez pas supprimer ce message."+this.nomAuteur+" "+username);
+            System.out.println("Il est impossible de supprimer ce message "+this.nomAuteur+" "+username);
         }
     }
 }

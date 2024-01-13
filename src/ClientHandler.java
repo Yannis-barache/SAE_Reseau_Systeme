@@ -13,116 +13,91 @@ public class ClientHandler extends Thread {
     private Serveur server;
     private PrintWriter out;
     private BufferedReader in;
-    private String username;
+    private User user;
 
 
-    public ClientHandler(Socket socket, Serveur server, String username) {
+    public ClientHandler(Socket socket, Serveur server, int id) throws IOException {
         this.clientSocket = socket;
         this.server = server;
-        this.username = username;
-        try {
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        } catch (IOException e) {
+        out = new PrintWriter(clientSocket.getOutputStream(), true);
+        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+        try{
+            if (!RequetesJson.isUserExists(in.readLine())) this.user = new User(in.readLine(), in.readLine(), clientSocket.getInetAddress().getHostAddress());
+       
+        }catch(IOException e){
             e.printStackTrace();
+        }
+    }    
+
+    public void broadcast(String msg, Socket clienSocket) {
+        for (ClientHandler client : server.getClients()) {
+            if (client.clientSocket != clienSocket) {
+                try {
+                    client.out.println(msg);
+                    client.out.flush();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     @Override
     public void run() {
+        String inputLine;
         try {
-            String message;
-            while ((message = in.readLine()) != null) {
-                System.out.println("Message du client: " + message);
-                sendMessage(message);
-
-                // Autres traitements ou réponses au client ici
+            while ((inputLine = in.readLine()) != null) {
+                if (inputLine.contains("/")) {
+                    String[] requestParams = inputLine.split(" ");
+                    if (requestParams.length == 2) {
+                        String command = requestParams[0];
+                        String param = requestParams[1];
+        
+                        switch (command) {
+                            case "/follow" -> this.user.follow(param);
+                            case "/unfollow" -> this.user.unfollow(param);
+                            case "/like" -> likeMessage(Integer.parseInt(param));
+                            case "/delete" -> deleteMessage(Integer.parseInt(param));
+                            default -> System.out.println("Commande invalide");
+                        }
+                    }
+                }
             }
+        } catch (IOException e) {
+            // Gérer les exceptions d'entrée/sortie
+            e.printStackTrace();
+        } finally{
+            deconnecter();
+        }
+    }
+
+    public void likeMessage(int id) {
+        Message message = new Message(id);
+        message.like();
+        broadcast("Le message " + id + " a été liké par " + this.user.getUsername(), this.clientSocket);
+    }
+
+    public void deleteMessage(int id) {
+        Message message = new Message(id);
+        message.delete(this.user.getUsername());
+        broadcast("Le message " + id + " a été supprimé par " + this.user.getUsername(), this.clientSocket);
+    }
+
+
+    public void deconnecter() {
+        server.getClients().remove(this);
+        try {
+            in.close();
+            out.close();
+            clientSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-    public void sendMessage(String message) {
-        out.println(message);
-    }
-
-    public String getUsername() {
-        return username;
-    }
+    
   
-    // public void handleCommand(String command) {
-    //     String[] parts = command.split(" ");
-    //     switch (parts[0]) {
-    //         case "/follow":
-    //             if (parts.length == 2) {
-    //                 server.followUser(username, parts[1]);
-    //             } else {
-    //                 sendMessage("Command format: /follow <username>");
-    //             }
-    //             break;
-    //         case "/unfollow":
-    //             if (parts.length == 2) {
-    //                 server.unfollowUser(username, parts[1]);
-    //             } else {
-    //                 sendMessage("Command format: /unfollow <username>");
-    //             }
-    //             break;
-    //         case "/like":
-    //             if (parts.length == 2) {
-    //                 try {
-    //                     int messageId = Integer.parseInt(parts[1]);
-    //                     server.likeMessage(username, messageId);
-    //                 } catch (NumberFormatException e) {
-    //                     sendMessage("Invalid message ID");
-    //                 }
-    //             } else {
-    //                 sendMessage("Command format: /like <messageId>");
-    //             }
-    //             break;
-    //         case "/delete":
-    //             if (parts.length == 2) {
-    //                 try {
-    //                     int messageId = Integer.parseInt(parts[1]);
-    //                     server.deleteMessage(username, messageId);
-    //                 } catch (NumberFormatException e) {
-    //                     sendMessage("Invalid message ID");
-    //                 }
-    //             } else {
-    //                 sendMessage("Command format: /delete <messageId>");
-    //             }
-    //             break;
-    //         default:
-    //             sendMessage("Command not recognized");
-    //             break;
-    //     }
-    // }
-
-    // public void handleMessage(String message) {
-    //     // Logique pour traiter les messages spécifiques du client
-    //     // Par exemple, vérifier les commandes spéciales
-    //     if (!message.startsWith("/")) {
-    //         // Créer un nouveau message avec les détails fournis par le client
-    //         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    //         String date = dateFormat.format(new Date()); // Date actuelle
-
-    //         // Créer le nouveau message
-    //         Message newMessage = new Message(message, getUsername(), 0, LocalDate.parse(date));
-
-    //         // Stocker le message dans le fichier JSON
-    //         newMessage.store(); // Méthode pour stocker le message dans le fichier JSON
-
-    //         // Envoyer un message de confirmation au client
-    //         sendMessage("Message saved successfully.");
-    //     }
-    //     else if (message.startsWith("/")) {
-    //         handleCommand(message);
-            
-    //     }
-    //     else{
-    //         server.handleMessage(message, this);
-    //     }
-    // }
+    
 }
 
 

@@ -15,47 +15,50 @@ import org.json.JSONObject;
 
 public class RequetesJson {
 
-    // Requêtes concernant les utilisateurs
+    // // Requêtes concernant les utilisateurs
 
-    public static void ajoutUtilisateurJSON(String pseudo, String ip) {
-        String path = "./json/utilisateurs.json";
-        JSONArray utilisateurs = new JSONArray();
+    public static void ajoutUserJSON(String username, String password, String ip) {
+        String path = "./Json/utilisateurs.json";
+        JSONArray users = new JSONArray();
         try (Scanner scanner = new Scanner(new File(path))) {
             if (scanner.hasNext()) {
                 String content = scanner.useDelimiter("\\Z").next();
-                utilisateurs = new JSONArray(content);
+                users = new JSONArray(content);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        JSONObject user = new JSONObject();
+        user.put("username", username);
+        user.put("password", password);
+        user.put("ip", ip);
+        user.put("followers", new JSONArray());
+        user.put("following", new JSONArray());
 
-        JSONObject utilisateur = new JSONObject();
-        utilisateur.put("pseudo", pseudo);
-        utilisateur.put("ip", ip);
-        utilisateur.put("abonnees", new JSONArray());
-        utilisateur.put("abonnements", new JSONArray());
-
-        utilisateurs.put(utilisateur);
+        users.put(user);
 
         try (PrintWriter jsonWrite = new PrintWriter(new FileWriter(path))) {
-            jsonWrite.write(utilisateurs.toString());
+            jsonWrite.write(users.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
 
-    public static Set<String> getAbonnesUtilisateur(String pseudo) {
-        String path = "./json/utilisateurs.json";
-        JSONArray utilisateurs = new JSONArray();
+
+    }    
+
+
+    public static Set<String> getUserFollowers(String username) {
+        String path = "./Json/utilisateurs.json";
+        JSONArray users = new JSONArray();
         try (Scanner scanner = new Scanner(new File(path))) {
             if (scanner.hasNext()) {
                 String content = scanner.useDelimiter("\\Z").next();
-                utilisateurs = new JSONArray(content);
-                for (int i = 0; i < utilisateurs.length(); i++) {
-                    JSONObject utilisateur = utilisateurs.getJSONObject(i);
-                    if (utilisateur.getString("pseudo").equals(pseudo)) {
-                        JSONArray abonnees = utilisateur.getJSONArray("abonnees");
-                        return abonnees.toList().stream().map(Object::toString).collect(Collectors.toSet());
+                users = new JSONArray(content);
+                for (int i = 0; i < users.length(); i++) {
+                    JSONObject user = users.getJSONObject(i);
+                    if (user.getString("username").equals(username)) {
+                        JSONArray followers = user.getJSONArray("followers");
+                        return followers.toList().stream().map(Object::toString).collect(Collectors.toSet());
                     }
                 }
             }
@@ -65,18 +68,18 @@ public class RequetesJson {
         return null;
     }
 
-    public static Set<String> getAbonnementsUtilisateurs(String pseudo) {
-        String path = "./json/utilisateurs.json";
-        JSONArray utilisateurs = new JSONArray();
+    public static Set<String> getUserFollowing(String username) {
+        String path = "./Json/utilisateurs.json";
+        JSONArray users = new JSONArray();
         try (Scanner scanner = new Scanner(new File(path))) {
             if (scanner.hasNext()) {
                 String content = scanner.useDelimiter("\\Z").next();
-                utilisateurs = new JSONArray(content);
-                for (int i = 0; i < utilisateurs.length(); i++) {
-                    JSONObject utilisateur = utilisateurs.getJSONObject(i);
-                    if (utilisateur.getString("pseudo").equals(pseudo)) {
-                        JSONArray abonnements = utilisateur.getJSONArray("abonnements");
-                        return abonnements.toList().stream().map(Object::toString).collect(Collectors.toSet());
+                users = new JSONArray(content);
+                for (int i = 0; i < users.length(); i++) {
+                    JSONObject user = users.getJSONObject(i);
+                    if (user.getString("username").equals(username)) {
+                        JSONArray following = user.getJSONArray("followers");
+                        return following.toList().stream().map(Object::toString).collect(Collectors.toSet());
                     }
                 }
             }
@@ -86,14 +89,14 @@ public class RequetesJson {
         return null;
     }
 
-    public static boolean isUserExists(String pseudo) {
+    public static boolean isUserExists(String username) {
         try {
-            String content = new String(Files.readAllBytes(Paths.get("./json/utilisateurs.json")));
+            String content = new String(Files.readAllBytes(Paths.get("./Json/utilisateurs.json")));
             JSONArray jsonArray = new JSONArray(content);
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject user = jsonArray.getJSONObject(i);
-                if (user.getString("pseudo").equals(pseudo)) {
+                if (user.getString("username").equals(username)) {
                     return true;
                 }
             }
@@ -106,7 +109,7 @@ public class RequetesJson {
     // Requêtes concernant les messages
 
     public static int ajoutMessageJSON(String contenu, String nomAuteur, int nbLikes, LocalDate date) {
-        String path = "./json/messages.json"; // Ajoutez le chemin vers votre fichier JSON ici
+        String path = "./Json/messages.json"; // Ajoutez le chemin vers votre fichier JSON ici
 
         // Lire le contenu existant du fichier et trouver l'ID le plus élevé
         int maxId = 0;
@@ -151,7 +154,7 @@ public class RequetesJson {
     }
 
     public static String[] rechercheMessageParId(int id) {
-        String path = "./json/messages.json";
+        String path = "./Json/messages.json";
         String[] result = new String[4];
 
         // Lire le contenu existant du fichier et trouver le message avec l'ID donné
@@ -179,7 +182,7 @@ public class RequetesJson {
     }
 
     public static void likeMessage(int id) {
-        String path = "./json/messages.json";
+        String path = "./Json/messages.json";
         JSONArray messages = new JSONArray();
         try (Scanner scanner = new Scanner(new File(path))) {
             if (scanner.hasNext()) {
@@ -208,7 +211,7 @@ public class RequetesJson {
     }
 
     public static void deleteMessage(int id) {
-        String path = "./json/messages.json";
+        String path = "./Json/messages.json";
         JSONArray messages = new JSONArray();
         boolean idExists = false;
         try (Scanner scanner = new Scanner(new File(path))) {
@@ -230,16 +233,91 @@ public class RequetesJson {
         }
 
         if (!idExists) {
-            System.out.println("Message with ID " + id + " does not exist.");
+            System.out.println("Message avec ID " + id + " n'existe pas.");
             return;
         }
 
         try {
             PrintWriter jsonWrite = new PrintWriter(new FileWriter(path));
             jsonWrite.write(messages.toString());
-            jsonWrite.close(); // Fermer explicitement le PrintWriter
+            jsonWrite.close(); 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }    
+
+    public static void ajoutFollower(String usernameUtilisateur, String usernameAbonne) {
+            String path = "./Json/utilisateurs.json";
+            JSONArray users = new JSONArray();
+            try (Scanner scanner = new Scanner(new File(path))) {
+                if (scanner.hasNext()) {
+                    String content = scanner.useDelimiter("\\Z").next();
+                    users = new JSONArray(content);
+                    for (int i = 0; i < users.length(); i++) {
+                        JSONObject user = users.getJSONObject(i);
+                        if (user.getString("pseudo").equals(usernameUtilisateur)) {
+                            JSONArray followers = user.getJSONArray("abonnements");
+                            // Vérifier si l'utilisateur est déjà dans la liste des abonnés
+                            if (!followers.toList().contains(usernameAbonne)) {
+                                followers.put(usernameAbonne); // Ajouter le pseudo de l'abonné
+                                user.put("abonnements", followers); // Mettre à jour la liste des abonnés
+                                users.put(i, user); // Remplacer l'utilisateur dans le tableau
+                            }
+                            break;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+    
+            // Réécrire le contenu mis à jour dans le fichier
+            try (PrintWriter jsonWrite = new PrintWriter(new FileWriter(path))) {
+                jsonWrite.write(users.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        
+    }
+
+
+    public static void deleteFollower(String usernameUtilisateur, String usernameAbonne){
+        String path = "./Json/utilisateurs.json";
+        JSONArray utilisateurs = new JSONArray();
+        try (Scanner scanner = new Scanner(new File(path))) {
+            if (scanner.hasNext()) {
+                String content = scanner.useDelimiter("\\Z").next();
+                utilisateurs = new JSONArray(content);
+                for (int i = 0; i < utilisateurs.length(); i++) {
+                    JSONObject utilisateur = utilisateurs.getJSONObject(i);
+                    if (utilisateur.getString("pseudo").equals(usernameUtilisateur)) {
+                        JSONArray abonnes = utilisateur.getJSONArray("abonnees");
+                        // Vérifier si l'utilisateur est dans la liste des abonnés
+                        if (abonnes.toList().contains(usernameAbonne)) {
+                            abonnes.remove(abonnes.toList().indexOf(usernameAbonne)); // Supprimer le pseudo de l'abonné
+                            utilisateur.put("abonnees", abonnes); // Mettre à jour la liste des abonnés
+                            utilisateurs.put(i, utilisateur); // Remplacer l'utilisateur dans le tableau
+                        }
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+        // Réécrire le contenu mis à jour dans le fichier
+        try (PrintWriter jsonWrite = new PrintWriter(new FileWriter(path))) {
+            jsonWrite.write(utilisateurs.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-}
+}    
+
+    
+
+
+
+
+
