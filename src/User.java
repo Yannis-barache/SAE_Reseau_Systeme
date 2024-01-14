@@ -2,23 +2,17 @@ import java.util.Set;
 
 public class User {
     private String username;
-    private String password;
     private String ip;
 
-    public User(String username, String password, String ip) {
+    public User(String username, String ip) {
         this.username = username;
-        this.password = password;
         this.ip = ip;
 
-        RequetesJson.ajoutUserJSON(username, password, ip);
+        RequetesJson.ajoutUserJSON(username, ip);
     }
 
     public String getUsername() {
         return this.username;
-    }
-
-    public String getPassword() {
-        return this.password;
     }
 
     public String getIp() {

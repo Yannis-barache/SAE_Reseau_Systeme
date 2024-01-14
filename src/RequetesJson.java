@@ -17,7 +17,7 @@ public class RequetesJson {
 
     // // Requêtes concernant les utilisateurs
 
-    public static void ajoutUserJSON(String username, String password, String ip) {
+    public static void ajoutUserJSON(String username, String ip) {
         String path = "./Json/utilisateurs.json";
         JSONArray users = new JSONArray();
         try (Scanner scanner = new Scanner(new File(path))) {
@@ -30,7 +30,6 @@ public class RequetesJson {
         }
         JSONObject user = new JSONObject();
         user.put("username", username);
-        user.put("password", password);
         user.put("ip", ip);
         user.put("followers", new JSONArray());
         user.put("following", new JSONArray());
@@ -246,42 +245,7 @@ public class RequetesJson {
         }
     }    
 
-    public static void ajoutFollower(String usernameUtilisateur, String usernameAbonne) {
-            String path = "./Json/utilisateurs.json";
-            JSONArray users = new JSONArray();
-            try (Scanner scanner = new Scanner(new File(path))) {
-                if (scanner.hasNext()) {
-                    String content = scanner.useDelimiter("\\Z").next();
-                    users = new JSONArray(content);
-                    for (int i = 0; i < users.length(); i++) {
-                        JSONObject user = users.getJSONObject(i);
-                        if (user.getString("pseudo").equals(usernameUtilisateur)) {
-                            JSONArray followers = user.getJSONArray("abonnements");
-                            // Vérifier si l'utilisateur est déjà dans la liste des abonnés
-                            if (!followers.toList().contains(usernameAbonne)) {
-                                followers.put(usernameAbonne); // Ajouter le pseudo de l'abonné
-                                user.put("abonnements", followers); // Mettre à jour la liste des abonnés
-                                users.put(i, user); // Remplacer l'utilisateur dans le tableau
-                            }
-                            break;
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-    
-            // Réécrire le contenu mis à jour dans le fichier
-            try (PrintWriter jsonWrite = new PrintWriter(new FileWriter(path))) {
-                jsonWrite.write(users.toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        
-    }
-
-
-    public static void deleteFollower(String usernameUtilisateur, String usernameAbonne){
+    public static void ajoutFollower(String pseudoUtilisateur, String pseudoAbonne) {
         String path = "./Json/utilisateurs.json";
         JSONArray utilisateurs = new JSONArray();
         try (Scanner scanner = new Scanner(new File(path))) {
@@ -290,15 +254,60 @@ public class RequetesJson {
                 utilisateurs = new JSONArray(content);
                 for (int i = 0; i < utilisateurs.length(); i++) {
                     JSONObject utilisateur = utilisateurs.getJSONObject(i);
-                    if (utilisateur.getString("pseudo").equals(usernameUtilisateur)) {
-                        JSONArray abonnes = utilisateur.getJSONArray("abonnees");
+                    if (utilisateur.getString("username").equals(pseudoUtilisateur)) {
+                        JSONArray abonnements = utilisateur.getJSONArray("following");
+                        if (!abonnements.toList().contains(pseudoAbonne)) {
+                            abonnements.put(pseudoAbonne);
+                            utilisateur.put("following", abonnements);
+                            utilisateurs.put(i, utilisateur);
+                        }
+                    } else if (utilisateur.getString("username").equals(pseudoAbonne)) {
+                        JSONArray abonnes = utilisateur.getJSONArray("followers");
+                        if (!abonnes.toList().contains(pseudoUtilisateur)) {
+                            abonnes.put(pseudoUtilisateur);
+                            utilisateur.put("followers", abonnes);
+                            utilisateurs.put(i, utilisateur);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+        try (PrintWriter jsonWrite = new PrintWriter(new FileWriter(path))) {
+            jsonWrite.write(utilisateurs.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void deleteFollower(String pseudoUtilisateur, String pseudoAbonne){
+        String path = "./Json/utilisateurs.json";
+        JSONArray utilisateurs = new JSONArray();
+        try (Scanner scanner = new Scanner(new File(path))) {
+            if (scanner.hasNext()) {
+                String content = scanner.useDelimiter("\\Z").next();
+                utilisateurs = new JSONArray(content);
+                for (int i = 0; i < utilisateurs.length(); i++) {
+                    JSONObject utilisateur = utilisateurs.getJSONObject(i);
+                    if (utilisateur.getString("username").equals(pseudoUtilisateur)) {
+                        JSONArray abonnes = utilisateur.getJSONArray("following");
                         // Vérifier si l'utilisateur est dans la liste des abonnés
-                        if (abonnes.toList().contains(usernameAbonne)) {
-                            abonnes.remove(abonnes.toList().indexOf(usernameAbonne)); // Supprimer le pseudo de l'abonné
-                            utilisateur.put("abonnees", abonnes); // Mettre à jour la liste des abonnés
+                        if (abonnes.toList().contains(pseudoAbonne)) {
+                            abonnes.remove(abonnes.toList().indexOf(pseudoAbonne)); // Supprimer le pseudo de l'abonné
+                            utilisateur.put("following", abonnes); // Mettre à jour la liste des abonnés
                             utilisateurs.put(i, utilisateur); // Remplacer l'utilisateur dans le tableau
                         }
-                        break;
+                    } else if (utilisateur.getString("username").equals(pseudoAbonne)) {
+                        JSONArray abonnes = utilisateur.getJSONArray("followers");
+                        // Vérifier si l'utilisateur est dans la liste des abonnés
+                        if (abonnes.toList().contains(pseudoUtilisateur)) {
+                            abonnes.remove(abonnes.toList().indexOf(pseudoUtilisateur)); // Supprimer le pseudo de l'utilisateur
+                            utilisateur.put("followers", abonnes); // Mettre à jour la liste des abonnés
+                            utilisateurs.put(i, utilisateur); // Remplacer l'utilisateur dans le tableau
+                        }
                     }
                 }
             }

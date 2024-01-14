@@ -21,7 +21,6 @@ public class Client {
             
             // Initialiser la communication avec le serveur
             out.println(username);
-            out.flush();
             new Thread(new ThreadEnvoyer(sc, out, this)).start();
             new Thread(new ThreadRecevoir(in, out, socket)).start();
     
@@ -38,7 +37,6 @@ public class Client {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-     
         System.out.print("Entrez votre nom d'utilisateur : ");
         String userName = scanner.nextLine();
     
@@ -47,7 +45,6 @@ public class Client {
     
         System.out.print("Entrez le numéro de port : ");
         int port = scanner.nextInt();
-        scanner.nextLine(); // Pour consommer la fin de ligne
     
         new Client(clientAdd, port,userName); // Lance le client avec le constructeur qui demande le nom d'utilisateur
     }

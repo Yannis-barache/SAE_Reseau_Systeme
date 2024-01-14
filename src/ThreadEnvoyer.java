@@ -22,7 +22,7 @@ public class ThreadEnvoyer implements Runnable {
     public void run(){
         while (true){
             String message = scanner.nextLine();
-            out.println("Message du client:"+message);
+            out.println(message);
             out.flush();
 
             new Message(message,client.getUsername(),0,date);
