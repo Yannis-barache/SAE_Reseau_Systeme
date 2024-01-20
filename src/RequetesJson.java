@@ -13,10 +13,48 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+/*
+ * Cette classe contient toutes les requêtes JSON pour lire et écrire dans les fichiers JSON.
+ * Vous pouvez utiliser ces méthodes dans vos classes ClientHandler et Serveur.
+ */
 public class RequetesJson {
 
     // // Requêtes concernant les utilisateurs
+    
+    /*
+     * Récupère un utilisateur à partir de son nom d'utilisateur.
+     * @param username Le nom d'utilisateur
+     */
+    public static User getUser(String username){
+        String path = "./Json/utilisateurs.json";
+        JSONArray utilisateurs = new JSONArray();
+        try{
+            Scanner scanner = new Scanner(new File(path));
+            if (scanner.hasNext()) {
+                String content = scanner.useDelimiter("\\Z").next();
+                utilisateurs = new JSONArray(content);
+                for (int i = 0; i < utilisateurs.length(); i++) {
+                    JSONObject utilisateur = utilisateurs.getJSONObject(i);
+                    if (utilisateur.getString("username").equals(username)) {
+                        return new User(username, utilisateur.getString("ip"));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        
+        }
+        return null;
 
+    }
+
+
+    /*
+     * Ajoute un utilisateur dans le fichier JSON.
+     * @param username Le nom d'utilisateur
+     * @param ip L'adresse IP de l'utilisateur
+     */
     public static void ajoutUserJSON(String username, String ip) {
         String path = "./Json/utilisateurs.json";
         JSONArray users = new JSONArray();
@@ -45,7 +83,10 @@ public class RequetesJson {
 
     }    
 
-
+    /*
+     * Récupère les abonnés d'un utilisateur à partir de son nom d'utilisateur.
+     * @param username Le nom d'utilisateur
+     */
     public static Set<String> getUserFollowers(String username) {
         String path = "./Json/utilisateurs.json";
         JSONArray users = new JSONArray();
@@ -67,6 +108,10 @@ public class RequetesJson {
         return null;
     }
 
+    /*
+     * Récupère les abonnements d'un utilisateur à partir de son nom d'utilisateur.
+     * @param username Le nom d'utilisateur
+     */
     public static Set<String> getUserFollowing(String username) {
         String path = "./Json/utilisateurs.json";
         JSONArray users = new JSONArray();
@@ -88,6 +133,10 @@ public class RequetesJson {
         return null;
     }
 
+    /*
+     * Vérifie si un utilisateur existe à partir de son nom d'utilisateur.
+     * @param username Le nom d'utilisateur
+     */
     public static boolean isUserExists(String username) {
         try {
             String content = new String(Files.readAllBytes(Paths.get("./Json/utilisateurs.json")));
@@ -105,8 +154,84 @@ public class RequetesJson {
         return false;
     }
 
+    /*
+     * Supprime un utilisateur à partir de son nom d'utilisateur.
+     * @param username Le nom d'utilisateur
+     */
+    public static void deleteUser(String username) {
+        String path = "./Json/utilisateurs.json";
+        JSONArray users = new JSONArray();
+
+        
+        try (Scanner scanner = new Scanner(new File(path))) {
+            if (scanner.hasNext()) {
+                String content = scanner.useDelimiter("\\Z").next();
+                users = new JSONArray(content);
+                for (int i = 0; i < users.length(); i++) {
+                    JSONObject user = users.getJSONObject(i);
+                    if (user.getString("username").equals(username)) {
+                        users.remove(i);
+                        break;
+                    }
+                }
+
+                // Réécrire le contenu mis à jour dans le fichier
+                try (PrintWriter jsonWrite = new PrintWriter(new FileWriter(path))) {
+                    jsonWrite.write(users.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+    }
+
+    /*
+     * Supprime tous les messages d'un utilisateur à partir de son nom d'utilisateur.
+     * @param username Le nom d'utilisateur
+     */
+    public static void deleteAllMessagesUser(String username) {
+        String path = "./Json/messages.json";
+        JSONArray messages = new JSONArray();
+        
+        try (Scanner scanner = new Scanner(new File(path))) {
+            if (scanner.hasNext()) {
+                String content = scanner.useDelimiter("\\Z").next();
+                messages = new JSONArray(content);
+                for (int i = 0; i < messages.length(); i++) {
+                    JSONObject message = messages.getJSONObject(i);
+                    if (message.getString("user").equals(username)) {
+                        messages.remove(i);
+                        i--;
+                    }
+                }
+
+                // Réécrire le contenu mis à jour dans le fichier
+                try (PrintWriter jsonWrite = new PrintWriter(new FileWriter(path))) {
+                    jsonWrite.write(messages.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+    }
+
+
+
     // Requêtes concernant les messages
 
+    /*
+     * Ajoute un message dans le fichier JSON.
+     * @param contenu Le contenu du message
+     * @param nomAuteur Le nom de l'auteur du message
+     * @param nbLikes Le nombre de likes du message
+     * @param date La date du message
+     */
     public static int ajoutMessageJSON(String contenu, String nomAuteur, int nbLikes, LocalDate date) {
         String path = "./Json/messages.json"; // Ajoutez le chemin vers votre fichier JSON ici
 
@@ -152,6 +277,10 @@ public class RequetesJson {
         return maxId + 1;
     }
 
+    /*
+     * Récupère tous les messages en fonction de l'id du message
+     * @param id L'id du message
+     */
     public static String[] rechercheMessageParId(int id) {
         String path = "./Json/messages.json";
         String[] result = new String[4];
@@ -180,6 +309,10 @@ public class RequetesJson {
         return result;
     }
 
+    /*
+     * Like un message à partir de son ID.
+     * @param id L'id du message
+     */
     public static void likeMessage(int id) {
         String path = "./Json/messages.json";
         JSONArray messages = new JSONArray();
@@ -196,19 +329,22 @@ public class RequetesJson {
                         break;
                     }
                 }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        // Réécrire le contenu mis à jour dans le fichier
-        try (PrintWriter jsonWrite = new PrintWriter(new FileWriter(path))) {
-            jsonWrite.write(messages.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                try (PrintWriter jsonWrite = new PrintWriter(new FileWriter(path))) {
+                        jsonWrite.write(messages.toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
     }
 
+    /*
+     * Supprime un message à partir de son ID.
+     * @param id L'id du message
+     */
     public static void deleteMessage(int id) {
         String path = "./Json/messages.json";
         JSONArray messages = new JSONArray();
@@ -245,6 +381,11 @@ public class RequetesJson {
         }
     }    
 
+    /*
+     * Récupère tous les messages en fonction de l'auteur.
+     * @param username Le nom d'utilisateur
+     * @return Un tableau de messages
+     */
     public static void ajoutFollower(String pseudoUtilisateur, String pseudoAbonne) {
         String path = "./Json/utilisateurs.json";
         JSONArray utilisateurs = new JSONArray();
@@ -282,7 +423,11 @@ public class RequetesJson {
         }
     }
 
-
+    /*
+     * Récupère tous les messages en fonction de l'auteur.
+     * @param username Le nom d'utilisateur
+     * @return Un tableau de messages
+     */
     public static void deleteFollower(String pseudoUtilisateur, String pseudoAbonne){
         String path = "./Json/utilisateurs.json";
         JSONArray utilisateurs = new JSONArray();
