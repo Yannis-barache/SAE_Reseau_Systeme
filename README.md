@@ -27,7 +27,7 @@
         <li><a href="#technologies">Les technologies utilisées</a></li>
         <li><a href="#installation">Installation</a></li>
         <li><a href="#utilisation">Utilisation</a></li>
-        <li><a href="#documentation">Documentation</a></li>
+        <li><a href="#documentation">Manuel Utilisateur</a></li>
     </ul>
 </nav>
 
@@ -87,18 +87,34 @@ Pour utiliser l'application, il vous suffit d'executer le fichier `lancement.sh`
 ensuite il vous suffit d'exécuter le fichier Serveur.java puis le fichier Client.java.
 
 
-## :page_with_curl: Documentation <a name = "documentation"></a>
-
-L'utilisateur peut utiliser le terminal pour interagir avec l'application. Il peut utiliser les commandes suivantes précédés par un `/` :
+## Manuel utilisateur <a name = "documentation"></a>
 
 
-- `exit` : Permet de quitter l'application
-- `delete <id_message>` : Permet de supprimer un tuit
-- `like <id_message>` : Permet de liker un tuit
-- `follow <nom utilisateur>` : Permet de suivre un utilisateur
-- `unfollow <nom utilisateur>` : Permet de ne plus suivre un utilisateur
+### Pour poster un message
 
-L'utilisateur peut également envoyer un message à tout le monde en tapant simplement le message qu'il souhaite envoyer directement dans le terminal.
+`<message>` : Permet de poster le message que l'utilisateur souhaite ce message sera mis dans le json 
+et pourra être liké ou supprimé par la suite.
+
+### Pour interagir avec l'application 
+
+L'utilisateur peut utiliser le terminal pour interagir avec l'application. Il peut utiliser 
+les commandes suivantes précédés par un `/` :
+
+
+#### Pour supprimer un message
+
+`delete <id_message>` : Permet de supprimer un message en indiquant le message 
+que l'utilisateur souhaite supprimer.
+
+#### Pour liker un message
+`like <id_message>` : Permet de liker un tuit en indiquant l'id du message que l'utilisateur souhaite liker.
+
+#### Pour suivre ou ne plus suivre un utilisateur
+`follow <nom_utilisateur>` : Permet de suivre l'utilisateur passée en paramètre. <br>
+`unfollow <nom_utilisateur>` : Permet de ne plus suivre l'utilisateur passée en paramètre.
+
+#### Pour quitter l'application
+`exit` : Permet de quitter l'application.
 
 
 
