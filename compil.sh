@@ -2,4 +2,4 @@
 # Compiles the program
 # Usage: ./compil.sh
 
-javac -d monOut/  src/*.java
+javac -cp Json/json-20210307.jar -d out/ src/*.java

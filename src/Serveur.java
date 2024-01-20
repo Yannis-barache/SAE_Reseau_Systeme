@@ -1,68 +1,97 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Scanner;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 public class Serveur {
+    private ServerSocket serverSocket;
+    private List<ClientHandler> clients = new ArrayList<>();
+    private int clientCounter = 0;
+    private ExecutorService pool;
 
-    final ServerSocket serveurSocket;
-    Socket clientSocket;
-    final BufferedReader in;
-    final PrintWriter out;
-    final Scanner sc = new Scanner(System.in);
-
-    public Serveur() throws IOException {
-        serveurSocket = new ServerSocket(5000);
-        clientSocket = serveurSocket.accept();
-        out = new PrintWriter(clientSocket.getOutputStream());
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+    public Serveur(int port) throws IOException {
+        this.serverSocket = new ServerSocket(port);
+        this.clients = new ArrayList<>();
+        this.pool = Executors.newFixedThreadPool(4);
+        this.clientCounter = 0;
     }
 
-    public void EnvoiMessage(String msg) {
-        out.println(msg);
-        out.flush();
-    }
-
-    public String ReceptionMessage() throws IOException {
-        String msg = in.readLine();
-        return msg;
-    }
-
-    public void Fermeture() throws IOException {
-        out.close();
-        clientSocket.close();
-        serveurSocket.close();
-    }
-
-
-
-    public static void main(String[] test) throws IOException {
-        Serveur s = new Serveur();
-        String msg;
+    public void start() {
+        System.out.println("Serveur à l'écoute sur le port " + serverSocket.getLocalPort());
         while (true) {
-            msg = s.ReceptionMessage();
-            if (msg == null) {
-                System.out.println("Client déconecté");
-                s.clientSocket.close();
-                s.clientSocket = s.serveurSocket.accept();
+            try {
+                // Attente de connexion d'un client
+                Socket client = serverSocket.accept();
+                System.out.println("Connexion cliente reçue.");
+                clientCounter++;
+                ClientHandler t = new ClientHandler(client, this, clientCounter);
+                clients.add(t);
+                pool.submit(t);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            if (msg.equals("/quit")) {
-                System.out.println("Client déconecté");
-                s.clientSocket.close();
-                s.clientSocket = s.serveurSocket.accept();
-            }
-
-            if (msg.equals("/help")) {
-                s.EnvoiMessage("Liste des commandes : \n /help : affiche la liste des commandes \n /quit : vous déconnecte \n /ip : Renvoi votre ip \n ");
-
-            }
-            // Récupération de l'ip du client
-            String ip = s.clientSocket.getRemoteSocketAddress().toString();
-            System.out.println(ip +" : " + msg);
         }
-
     }
-}
+
+    /*
+     * Cette méthode permet de récupérer la liste des clients connectés au serveur
+     */
+    public List<ClientHandler> getClients() {
+        return clients;
+    }
+
+    /*
+     * Cette méthode permet de supprimer un message de la base de données
+     */
+    public void deleteMessage(int id) {
+        RequetesJson.deleteMessage(id);
+    }
+
+    /*
+     * Cette méthode permet de supprimer un utilisateur de la base de données
+     */
+    public void removeUser(String username) {
+        RequetesJson.deleteUser(username);
+        RequetesJson.deleteAllMessagesUser(username);
+        for (ClientHandler client : clients) {
+            if (client.getUtilisateur().getUsername().equals(username)) {
+                client.deconnecter();
+                break;
+            }
+        }
+    }
+
+
+    
+
+    public static void main(String[] args) {
+        int port = 5555; // Remplacez par votre numéro de port souhaité
+        try{
+        Serveur serv = new Serveur(port);// Crée une instance de Serveur et démarre le serveur dans le constructeur
+
+        new Thread(serv::start).start();
+
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            String command = scanner.nextLine();
+    
+                // Vérifier si la commande est /delete ou /remove
+            if (command.startsWith("/delete ")) {
+                int id = Integer.parseInt(command.split(" ")[1]);
+                serv.deleteMessage(id);
+            } else if (command.startsWith("/remove ")) {
+                String username = command.split(" ")[1];
+                serv.removeUser(username);
+            }
+
+
+            }
+    } catch (IOException error){
+        error.printStackTrace();
+        
+    }
+    }
+}                
+
