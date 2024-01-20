@@ -28,6 +28,8 @@
         <li><a href="#installation">Installation</a></li>
         <li><a href="#utilisation">Utilisation</a></li>
         <li><a href="#documentation">Manuel Utilisateur</a></li>
+        <li><a href="#justification">Justification des choix techniques</a></li>
+        <li><a href="#diagramme">Diagramme de classe</a></li>
     </ul>
 </nav>
 
@@ -43,29 +45,10 @@ Ce projet est un projet de groupe réalisé dans le cadre de notre deuxième ann
 
 [![Ibrahima Barry](https://img.shields.io/badge/Ibrahima%20Barry-000000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ibarry25)
 
-
-## :gear: Les fonctionnalités <a name = "fonctionnalites"></a>
-
-### :computer: Partie Client
-
-- [ ] Création d'un tuit
-- [ ] Suppression d'un tuit
-- [ ] Like d'un tuit
-- [ ] Follow d'un utilisateur
-- [ ] Unfollow d'un utilisateur
-
-### :floppy_disk: Partie Serveur
-
-- [ ] Authentification
-- [ ] Création d'un compte
-- [ ] Suppresion d'un tuit
-- [ ] Suppression d'un utilisateur
-
 ## :computer: Les technologies utilisées <a name = "technologies"></a>
-- `Java`
-- `JavaFX`
-- `MySQL`
-- `Git`
+- `Java` (pour le serveur et le client)
+- `JavaFX` (pour l'interface graphique)
+- `Git` (pour la gestion du projet)
 
 ## :inbox_tray: Installation <a name = "installation"></a>
 
@@ -73,7 +56,6 @@ Pour installer le projet, il vous suffit de cloner le projet sur votre machine.
 
 ```bash
 git clone https://github.com/Yannis-barache/SAE_Reseau_Systeme.git
-
 ```
 
 ##  Utilisation <a name = "utilisation"></a>
@@ -115,6 +97,38 @@ que l'utilisateur souhaite supprimer.
 
 #### Pour quitter l'application
 `exit` : Permet de quitter l'application.
+
+
+## Justification des choix techniques <a name = "justification"></a>
+
+### Pourquoi Java ?
+
+Nous avons choisi Java car c'est un langage que nous connaissons bien et qui est très utilisé dans le monde de 
+l'entreprise. De plus, il est très utilisé pour la création d'application client-serveur.
+Dans l'optique de réaliser une interface graphique, nous aurions aussi pu utiliser JavaFX.
+
+### Pourquoi utiliser un json ?
+Toutes les données de l'application sont stockées dans un fichier json.
+Le json est un format de fichier très utilisé donc très documenté. 
+Il est aussi très facile à manipuler en Java avec l'utilisation de 
+`org.json` qui est une librairie très connue et très utilisée.
+
+Une autre solution aurait été d'utiliser une base de données mais nous avons préféré utiliser un fichier json car 
+nous n'avions pas besoin de faire des requêtes complexes et nous n'avions pas besoin de faire des jointures.
+
+
+## Diagramme de classe  <a name = "diagramme"></a>
+<div style="text-align:center">
+<img src="Diagramme.png" />
+</div>
+
+
+
+
+
+
+
+
 
 
 
