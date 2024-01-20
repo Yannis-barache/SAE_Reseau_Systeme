@@ -37,6 +37,8 @@
 
 Ce projet est un projet de groupe réalisé dans le cadre de notre deuxième année de BUT Informatique. Il a pour but de nous faire découvrir le monde de l'entreprise et de nous faire travailler en groupe sur un projet concret. Ce projet porte plus précisément sur la création d'une application client-serveur recréant un réseau social qui s'appelera `Tuit'o`.
 
+Pour la bonne compréhension du projet, il est primordial de lire ce rapport avant de lire le code. Il donne des indicationqs sur les choix techniques que nous avons fait et sur les fonctionnalités que nous avons implémentées mais également sur la façon dont le projet doit être lancé. 
+
 ## :busts_in_silhouette: Membres du groupe <a name = "membres"></a>
 
 [![Yannis Barache](https://img.shields.io/badge/Yannis%20Barache-000000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Yannis-barache)
@@ -47,7 +49,6 @@ Ce projet est un projet de groupe réalisé dans le cadre de notre deuxième ann
 
 ## :computer: Les technologies utilisées <a name = "technologies"></a>
 - `Java` (pour le serveur et le client)
-- `JavaFX` (pour l'interface graphique)
 - `Git` (pour la gestion du projet)
 
 ## :inbox_tray: Installation <a name = "installation"></a>
@@ -60,14 +61,13 @@ git clone https://github.com/Yannis-barache/SAE_Reseau_Systeme.git
 
 ##  Utilisation <a name = "utilisation"></a>
 
-Pour utiliser l'application, il vous suffit d'executer le fichier `lancement.sh` qui se trouve à la racine du projet avec la commande suivante.
+Pour utiliser l'application, il vous suffit d'executer le fichier `compil.sh` qui se trouve à la racine du projet avec la commande suivante.
 
 ```bash
 ./compil.sh
 ```
 
-ensuite il vous suffit d'exécuter le fichier Serveur.java puis le fichier Client.java.
-
+ensuite il vous suffit d'exécuter le fichier Serveur.java puis le fichier Client.java dans un autre terminal (on précise qu'il faut exécuter directement avec le bouton run de vscode car sinon vous aurez des erreurs de json).
 
 ## Manuel utilisateur <a name = "documentation"></a>
 
@@ -95,8 +95,7 @@ que l'utilisateur souhaite supprimer.
 `follow <nom_utilisateur>` : Permet de suivre l'utilisateur passée en paramètre. <br>
 `unfollow <nom_utilisateur>` : Permet de ne plus suivre l'utilisateur passée en paramètre.
 
-#### Pour quitter l'application
-`exit` : Permet de quitter l'application.
+Il ne faut pas mettre d'espace entre les commandes et les messages dans le terminal sinon des bugs seront constatés.
 
 
 ## Justification des choix techniques <a name = "justification"></a>
@@ -117,9 +116,25 @@ Une autre solution aurait été d'utiliser une base de données mais nous avons 
 nous n'avions pas besoin de faire des requêtes complexes et nous n'avions pas besoin de faire des jointures.
 
 
+### Qu'est-ce qu'on a pas pu faire ?
+
+Nous n'avons pas pu géré, par manque de temps le fait qu'on ne puisse pas liker plusieurs fois un message.
+Aussi l'interface graphique est une partie que nous n'avons pas pu faire car aussi par manque de temps car nous voulions nous assurer que toutes les fonctionnalités disponibles dans le terminal fonctionnent correctement.
+
+### Qu'est-ce qu'on a pu faire ?  
+
+Toutes les fonctionnalités ont été implémantées et fonctionnent correctement. Nous avons aussi pu faire en sorte que le serveur puisse gérer plusieurs clients en même temps. Un client lorsqu'il envoie un message quelconque ne peut l'envoyer qu'à une personne à laquelle il est abonné. Il ne peut pas envoyer de message à une personne à laquelle il n'est pas abonné et donc cette personne ne pourra pas voir le message, autre condition, il faut que l'autre personne soit abonnée en retour. De plus un client peut certes liker un message en revanche il peut le liker autant de fois qu'il le souhaite ce qui ne fait pas de sens. Le serveur peut également supprimer les messages et l'utilisateur avec tous les messages qu'il a envoyé. Le serveur peut également supprimer un message mais aussi supprimer un utilisateur et tous ses messages.
+Pour voir que les résultats sont effectifs, il faut regarder dans le json pour voir si les actions ont bien été effectuées. 
+
+### Qu'est-ce qu'on en retiens ?
+
+Nous avons beaucoup appris durant cette SAÉ notamment à mettre en oeuvre les compétences " Administrer des systèmes informatiques communicants complexes" et "Travailler dans une équipe informatique" cela car il fallait très bien gérer la connexion entre le serveur et le client et aussi car il fallait bien se répartir les tâches pour que chacun puisse travailler sur une partie du projet. Nous avons aussi renfotcer notre utilisation des outils de gestion de projet comme `git` et `github` qui sont très utilisés dans le monde de l'entreprise et qui sont très utiles pour travailler en groupe.
+
+Nous sommes tout de même assez déçu car nous aurions aimé en faire beaucoup plus notamment au niveau de l'interface graphique et aussi au niveau de la gestion des erreurs mais le temps nous a manqué en raison.  
+
 ## Diagramme de classe  <a name = "diagramme"></a>
 <div style="text-align:center">
-<img src="Diagramme.png" />
+<img src="Diagramme_final.png" />
 </div>
 
 

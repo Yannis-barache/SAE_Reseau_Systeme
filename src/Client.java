@@ -10,6 +10,12 @@ public class Client {
     private String clientAdress;
     private String username;
 
+    /*
+     * Constructeur de la classe Client
+     * @param clientAdress : adresse IP du serveur
+     * @param serverPort : numéro de port du serveur
+     * @param username : nom d'utilisateur du client
+     */
     public Client(String clientAdress, int serverPort, String username) {
         this.clientAdress = clientAdress;
         this.username = username;
@@ -23,12 +29,17 @@ public class Client {
             out.println(username);
             new Thread(new ThreadEnvoyer(sc, out, this)).start();
             new Thread(new ThreadRecevoir(in, out, socket)).start();
+
+            System.out.println();
     
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /*
+     * @getter
+     */
     public String getUsername() {
         return this.username;
     }

@@ -10,7 +10,12 @@ public class ThreadEnvoyer implements Runnable {
     private LocalDate date;
 
 
-
+    /*
+     * Constructeur de la classe ThreadEnvoyer
+     * @param scanner : scanner permettant de lire les messages entrés par l'utilisateur
+     * @param out : PrintWriter permettant d'envoyer des messages au serveur
+     * @param client : client qui envoie les messages
+     */
     public ThreadEnvoyer(Scanner scanner, PrintWriter out, Client client) {
         this.scanner = scanner;
         this.out = out;
@@ -19,15 +24,21 @@ public class ThreadEnvoyer implements Runnable {
     }
 
 
+    /*
+     * Cette méthode est appelée au lancement du thread
+     * Elle permet d'envoyer des messages au serveur
+     
+     */
     @Override
     public void run(){
-        while (true){
-            String message = scanner.nextLine();
-            out.println(message);
+        while (true) {
+            String messageToSend = scanner.nextLine();
+            out.println(client.getUsername() + ":" + messageToSend);
             out.flush();
 
-            new Message(message,client.getUsername(),0,date);
+
             
+
         }
     }
 

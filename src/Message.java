@@ -7,6 +7,13 @@ public class Message {
     private int nbLikes;
     private LocalDate date;
 
+    /*
+     * Constructeur de la classe Message
+     * @param contenu : contenu du message
+     * @param nomAuteur : nom de l'auteur du message
+     * @param nbLikes : nombre de likes du message
+     * @param date : date de publication du message
+     */
     public Message(String contenu, String nomAuteur, int nbLikes, LocalDate date) {
         this.contenu = contenu;
         this.nomAuteur = nomAuteur;
@@ -16,6 +23,10 @@ public class Message {
         this.id = maxId + 1;
     }
 
+    /*
+     * Constructeur de la classe Message
+     * @param id : id du message
+     */
     public Message(int id) {
         this.id = id;
     
@@ -27,6 +38,9 @@ public class Message {
         this.date = LocalDate.parse(tableauAttributs[3]);
     }
 
+    /*
+     * @getter
+     */
     public int getId() {
         return this.id;
     }
@@ -47,12 +61,19 @@ public class Message {
         return this.date;
     }
 
+    /*
+     * Permet d'incrémenter le nombre de likes d'un message grâce à la bibliothèque RequetesJson
+     */
     public void like() {
         this.nbLikes++;
 
         RequetesJson.likeMessage(this.id);
     }
     
+    /*
+     * Permet de supprimer un message grâce à la bibliothèque RequetesJson
+     * @param username : nom de l'utilisateur qui souhaite supprimer le message
+     */
     public void delete(String username) {
         if (this.nomAuteur.equals(username)) {
             RequetesJson.deleteMessage(this.id);
@@ -61,5 +82,10 @@ public class Message {
         else {
             System.out.println("Il est impossible de supprimer ce message "+this.nomAuteur+" "+username);
         }
+    }
+
+    @Override
+    public String toString() {
+        return this.id + "~" + this.nomAuteur + "~" + this.contenu + "~" + this.nbLikes + "~" + this.date;
     }
 }
