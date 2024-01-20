@@ -16,6 +16,34 @@ import org.json.JSONObject;
 public class RequetesJson {
 
     // // Requêtes concernant les utilisateurs
+    public static User getUser(String username){
+        String path = "./Json/utilisateurs.json";
+        JSONArray utilisateurs = new JSONArray();
+        try{
+            Scanner scanner = new Scanner(new File(path));
+            if (scanner.hasNext()) {
+                String content = scanner.useDelimiter("\\Z").next();
+                utilisateurs = new JSONArray(content);
+                for (int i = 0; i < utilisateurs.length(); i++) {
+                    JSONObject utilisateur = utilisateurs.getJSONObject(i);
+                    if (utilisateur.getString("username").equals(username)) {
+                        return new User(username, utilisateur.getString("ip"));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        
+        }
+        return null;
+
+    }
+
+
+
+
+
+    
 
     public static void ajoutUserJSON(String username, String ip) {
         String path = "./Json/utilisateurs.json";
@@ -196,17 +224,16 @@ public class RequetesJson {
                         break;
                     }
                 }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        // Réécrire le contenu mis à jour dans le fichier
-        try (PrintWriter jsonWrite = new PrintWriter(new FileWriter(path))) {
-            jsonWrite.write(messages.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                try (PrintWriter jsonWrite = new PrintWriter(new FileWriter(path))) {
+                        jsonWrite.write(messages.toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
     }
 
     public static void deleteMessage(int id) {

@@ -81,17 +81,24 @@ git clone https://github.com/Yannis-barache/SAE_Reseau_Systeme.git
 Pour utiliser l'application, il vous suffit d'executer le fichier `lancement.sh` qui se trouve à la racine du projet avec la commande suivante.
 
 ```bash
-./lancement.sh
+./compil.sh
 ```
+
+ensuite il vous suffit d'exécuter le fichier Serveur.java puis le fichier Client.java.
+
 
 ## :page_with_curl: Documentation <a name = "documentation"></a>
 
 L'utilisateur peut utiliser le terminal pour interagir avec l'application. Il peut utiliser les commandes suivantes précédés par un `/` :
 
-- `help` : Affiche la liste des commandes disponibles
+
 - `exit` : Permet de quitter l'application
-- `create` : Permet de créer un tuit
 - `delete <id_message>` : Permet de supprimer un tuit
 - `like <id_message>` : Permet de liker un tuit
 - `follow <nom utilisateur>` : Permet de suivre un utilisateur
 - `unfollow <nom utilisateur>` : Permet de ne plus suivre un utilisateur
+
+L'utilisateur peut également envoyer un message à tout le monde en tapant simplement le message qu'il souhaite envoyer directement dans le terminal.
+
+
+

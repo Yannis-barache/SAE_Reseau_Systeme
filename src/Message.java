@@ -56,6 +56,7 @@ public class Message {
     public void delete(String username) {
         if (this.nomAuteur.equals(username)) {
             RequetesJson.deleteMessage(this.id);
+            System.out.println("Le message "+this.contenu+" de "+username+" a été supprimé");
         }
         else {
             System.out.println("Il est impossible de supprimer ce message "+this.nomAuteur+" "+username);

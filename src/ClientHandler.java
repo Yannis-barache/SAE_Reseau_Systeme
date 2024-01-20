@@ -17,7 +17,10 @@ public class ClientHandler extends Thread {
 
         try{
             String username = in.readLine();
-            if (!RequetesJson.isUserExists(username)) this.user = new User(username, clientSocket.getInetAddress().getHostAddress());
+            if (!RequetesJson.isUserExists(username)){
+                this.user = new User(username, clientSocket.getInetAddress().getHostAddress());
+            }    
+            else{this.user = RequetesJson.getUser(username);}
        
         }catch(IOException e){
             e.printStackTrace();
